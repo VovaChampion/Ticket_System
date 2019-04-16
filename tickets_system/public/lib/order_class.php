@@ -13,9 +13,9 @@ class Order
     // select the order
     public function selectOrder($id)
     {
-        $stmt = $this->db->prepare('SELECT o.id, oi.id, t.name_ticket, o.customer_name, oi.valid_date, oi.used_ticket FROM Tickets.orders_items oi
-        JOIN Tickets.orders o ON o.id = oi.order_id
-        JOIN Tickets.tickets t ON t.id = oi.ticket_id
+        $stmt = $this->db->prepare('SELECT o.id, oi.id, t.name_ticket, o.customer_name, oi.valid_date, oi.used_ticket FROM orders_items oi
+        JOIN orders o ON o.id = oi.order_id
+        JOIN tickets t ON t.id = oi.ticket_id
         WHERE o.id = :id');
 
         $stmt->bindParam(':id', $id, PDO::PARAM_INT);
@@ -90,9 +90,9 @@ class Order
 
     public function selectOrderStatus($id_item)
     {
-        $stmt = $this->db->prepare('SELECT oi.used_ticket FROM Tickets.orders_items oi
-        JOIN Tickets.orders o ON o.id = oi.order_id
-        JOIN Tickets.tickets t ON t.id = oi.ticket_id
+        $stmt = $this->db->prepare('SELECT oi.used_ticket FROM orders_items oi
+        JOIN orders o ON o.id = oi.order_id
+        JOIN tickets t ON t.id = oi.ticket_id
         WHERE oi.id = :id');
 
         $stmt->bindParam(':id', $id_item, PDO::PARAM_INT);
@@ -106,7 +106,7 @@ class Order
         $date = date('Y-m-d');
         $valid_date = date('Y-m-d', strtotime(' + 30 days'));
 
-        $stmt = $this->db->prepare('INSERT INTO Tickets.orders (customer_name, customer_email, order_date) 
+        $stmt = $this->db->prepare('INSERT INTO orders (customer_name, customer_email, order_date) 
         VALUES (:customer_name, :customer_email, :order_date);');
 
         $stmt->execute([
@@ -119,7 +119,7 @@ class Order
 
         foreach($my_array as $key => $value)
         {
-            $stmt = $this->db->prepare('INSERT INTO Tickets.orders_items (order_id, ticket_id, valid_date, used_ticket) 
+            $stmt = $this->db->prepare('INSERT INTO orders_items (order_id, ticket_id, valid_date, used_ticket) 
             VALUES (:order_id, :ticket_id, :valid_date, \'no\');');
             $stmt->execute([
 				':order_id' => $id_order,
